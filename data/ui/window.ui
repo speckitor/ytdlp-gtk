@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <object class="AdwApplicationWindow" id="win">
+    <property name="title">Youtube Downloader</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">15</property>
+        <child>
+          <object class="GtkHeaderBar">
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">15</property>
+            <property name="margin-start">20</property>
+            <property name="margin-end">20</property>  
+            <child>
+              <object class="GtkEntry" id="link">
+                <property name="placeholder-text">Download link</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackSwitcher" id="switcher">
+              </object>
+            </child>
+            <child>
+              <object class="GtkStack" id="stack">
+                <child>
+                  <object class="GtkStackPage" id="video">
+                    <property name="name">Video</property>
+                    <property name="title">Video</property>
+                    <property name="child">
+                      <object class="GtkLabel">
+                        <property name="label">video</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkStackPage" id="audio">
+                    <property name="name">Audio</property>
+                    <property name="title">Audio</property>
+                    <property name="child">
+                      <object class="GtkLabel">
+                        <property name="label">audio</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          <child>
+            <object class="GtkBox">
+              <property name="orientation">horizontal</property>
+              <property name="spacing">10</property>
+              <child>
+                <object class="GtkEntry">
+                  <property name="placeholder-text">Download path</property>
+                </object>
+              </child>
+              <child>
+                <object class="GtkButton">
+                  <property name="label">Browse</property>
+                </object>
+              </child>
+            </object>
+          </child>
+          <child>
+            <object class="GtkButton">
+              <property name="label">Download</property>
+            </object>
+          </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
