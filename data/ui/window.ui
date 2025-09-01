@@ -7,179 +7,183 @@
     <property name="default-width">700</property>
     <property name="default-height">380</property>
     <child>
-      <object class="GtkBox">
-        <property name="orientation">vertical</property>
-        <property name="spacing">15</property>
-        <child>
-          <object class="GtkHeaderBar">
-          </object>
-        </child>
+      <object class="AdwToastOverlay" id="overlay">
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <property name="spacing">15</property>
-            <property name="margin-start">20</property>
-            <property name="margin-end">20</property>  
             <child>
-              <object class="GtkEntry" id="link">
-                <property name="placeholder-text">Download link</property>
+              <object class="GtkHeaderBar">
               </object>
             </child>
             <child>
-              <object class="GtkStackSwitcher" id="switcher">
-              </object>
-            </child>
-            <child>
-              <object class="GtkStack" id="stack">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">15</property>
+                <property name="margin-start">20</property>
+                <property name="margin-end">20</property>  
                 <child>
-                  <object class="GtkStackPage" id="video">
-                    <property name="name">Video</property>
-                    <property name="title">Video</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">15</property>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">15</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="label">Resolution:</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkDropDown">
-                                <property name="model">
-                                  <object class="GtkStringList">
-                                    <items>
-                                      <item>4K</item>
-                                      <item>1440p</item>
-                                      <item>1080p</item>
-                                      <item>720p</item>
-                                      <item>480p</item>
-                                    </items>
-                                  </object>
-                                </property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">15</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="label">Format:</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkDropDown">
-                                <property name="model">
-                                  <object class="GtkStringList">
-                                    <items>
-                                      <item>MP4</item>
-                                      <item>MKV</item>
-                                      <item>WEBM</item>
-                                    </items>
-                                  </object>
-                                </property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
+                  <object class="GtkEntry" id="link">
+                    <property name="placeholder-text">Download link</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkStackPage" id="audio">
-                    <property name="name">Audio</property>
-                    <property name="title">Audio</property>
-                    <property name="child">
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">15</property>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">15</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="label">Quality:</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkDropDown">
-                                <property name="model">
-                                  <object class="GtkStringList">
-                                    <items>
-                                      <item>Best</item>
-                                      <item>Good</item>
-                                      <item>Medium</item>
-                                      <item>Low</item>
-                                    </items>
-                                  </object>
-                                </property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">15</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="label">Format:</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkDropDown">
-                                <property name="model">
-                                  <object class="GtkStringList">
-                                    <items>
-                                      <item>MP3</item>
-                                      <item>WAV</item>
-                                      <item>M4A</item>
-                                      <item>OPUS</item>
-                                      <item>FLAC</item>
-                                    </items>
-                                  </object>
-                                </property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
+                  <object class="GtkStackSwitcher" id="switcher">
                   </object>
                 </child>
+                <child>
+                  <object class="GtkStack" id="stack">
+                    <child>
+                      <object class="GtkStackPage" id="video">
+                        <property name="name">Video</property>
+                        <property name="title">Video</property>
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">15</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">15</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">Resolution:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkDropDown" id="resolution">
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item>2160p</item>
+                                          <item>1440p</item>
+                                          <item>1080p</item>
+                                          <item>720p</item>
+                                          <item>480p</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">15</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">Format:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkDropDown" id="video_format">
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item>MP4</item>
+                                          <item>MKV</item>
+                                          <item>WEBM</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage" id="audio">
+                        <property name="name">Audio</property>
+                        <property name="title">Audio</property>
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">15</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">15</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">Quality:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkDropDown" id="audio_quality">
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item>Best</item>
+                                          <item>Good</item>
+                                          <item>Medium</item>
+                                          <item>Low</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">15</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">Format:</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkDropDown" id="audio_format">
+                                    <property name="model">
+                                      <object class="GtkStringList">
+                                        <items>
+                                          <item>MP3</item>
+                                          <item>WAV</item>
+                                          <item>M4A</item>
+                                          <item>OPUS</item>
+                                          <item>VORBIS</item>
+                                        </items>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              <child>
+                <object class="GtkBox">
+                  <property name="orientation">horizontal</property>
+                  <property name="spacing">10</property>
+                  <child>
+                    <object class="GtkEntry" id="path">
+                      <property name="hexpand">True</property>
+                      <property name="placeholder-text">Download path</property>
+                    </object>
+                  </child>
+                  <child>
+                    <object class="GtkButton" id="browse">
+                      <property name="label">Browse</property>
+                    </object>
+                  </child>
+                </object>
+              </child>
+              <child>
+                <object class="GtkButton" id="download">
+                  <property name="label">Download</property>
+                </object>
+              </child>
               </object>
             </child>
-          <child>
-            <object class="GtkBox">
-              <property name="orientation">horizontal</property>
-              <property name="spacing">10</property>
-              <child>
-                <object class="GtkEntry">
-                  <property name="hexpand">True</property>
-                  <property name="placeholder-text">Download path</property>
-                </object>
-              </child>
-              <child>
-                <object class="GtkButton">
-                  <property name="label">Browse</property>
-                </object>
-              </child>
-            </object>
-          </child>
-          <child>
-            <object class="GtkButton">
-              <property name="label">Download</property>
-            </object>
-          </child>
           </object>
         </child>
       </object>
