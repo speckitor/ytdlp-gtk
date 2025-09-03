@@ -5,7 +5,7 @@
   <object class="AdwApplicationWindow" id="win">
     <property name="title">Youtube Downloader</property>
     <property name="default-width">700</property>
-    <property name="default-height">380</property>
+    <property name="default-height">410</property>
     <child>
       <object class="AdwToastOverlay" id="overlay">
         <child>
@@ -23,7 +23,7 @@
                 <property name="margin-start">20</property>
                 <property name="margin-end">20</property>  
                 <child>
-                  <object class="GtkEntry" id="link">
+                  <object class="GtkEntry" id="link_entry">
                     <property name="placeholder-text">Download link</property>
                   </object>
                 </child>
@@ -51,7 +51,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkDropDown" id="resolution">
+                                  <object class="GtkDropDown" id="video_resolution_drop_down">
                                     <property name="model">
                                       <object class="GtkStringList">
                                         <items>
@@ -60,6 +60,9 @@
                                           <item>1080p</item>
                                           <item>720p</item>
                                           <item>480p</item>
+                                          <item>360p</item>
+                                          <item>240p</item>
+                                          <item>144p</item>
                                         </items>
                                       </object>
                                     </property>
@@ -77,7 +80,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkDropDown" id="video_format">
+                                  <object class="GtkDropDown" id="video_format_drop_down">
                                     <property name="model">
                                       <object class="GtkStringList">
                                         <items>
@@ -113,7 +116,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkDropDown" id="audio_quality">
+                                  <object class="GtkDropDown" id="audio_quality_drop_down">
                                     <property name="model">
                                       <object class="GtkStringList">
                                         <items>
@@ -138,7 +141,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkDropDown" id="audio_format">
+                                  <object class="GtkDropDown" id="audio_format_drop_down">
                                     <property name="model">
                                       <object class="GtkStringList">
                                         <items>
@@ -165,7 +168,7 @@
                   <property name="orientation">horizontal</property>
                   <property name="spacing">10</property>
                   <child>
-                    <object class="GtkEntry" id="path">
+                    <object class="GtkEntry" id="path_entry">
                       <property name="hexpand">True</property>
                       <property name="placeholder-text">Download path</property>
                     </object>
@@ -173,6 +176,24 @@
                   <child>
                     <object class="GtkButton" id="browse">
                       <property name="label">Browse</property>
+                    </object>
+                  </child>
+                </object>
+              </child>
+              <child>
+                <object class="GtkBox" id="downloading_box">
+                  <property name="orientation">horizontal</property>
+                  <property name="spacing">10</property>
+                  <property name="visible">False</property>
+                  <child>
+                    <object class="GtkProgressBar" id="pbar">
+                      <property name="hexpand">True</property>
+                      <property name="valign">center</property>
+                    </object>
+                  </child>
+                  <child>
+                    <object class="GtkButton" id="stop">
+                      <property name="icon-name">process-stop</property>
                     </object>
                   </child>
                 </object>

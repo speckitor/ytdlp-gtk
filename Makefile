@@ -37,3 +37,4 @@ uninstall:
 
 clean:
 	rm -f $(BINARY)
+	rm -f ./src/ytdlpgtk.c

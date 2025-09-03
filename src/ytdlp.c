@@ -1,48 +1,95 @@
 #include <gtk/gtk.h>
 
 #include <stdio.h>
+#include <stdatomic.h>
 
 #include "ytdlp.h"
 
-static char *create_url(DownloadConfig *cfg)
+atomic_bool stop_thread = false;
+
+static char *create_url(ApplicationContext *ctx)
 {
         char *url;
-        if (cfg->type == DOWNLOAD_VIDEO)
-                asprintf(&url, "yt-dlp --newline -f \"bv[height<=%s]+ba/b[height<=%s]\" --merge-output-format %s %s -o \"%s/%(title)s.%(ext)s\"", cfg->resolution, cfg->resolution, cfg->format, cfg->link, cfg->path);
-        else
-                asprintf(&url, "yt-dlp --newline -x --audio-format %s --audio-quality %u %s -o \"%s/%(title)s.%(ext)s\"", cfg->format, cfg->audio_quality, cfg->link, cfg->path);
+        char *path = gtk_editable_get_text(GTK_EDITABLE(ctx->path_entry));
+        char *link = gtk_editable_get_text(GTK_EDITABLE(ctx->link_entry));
+        if (ctx->type == DOWNLOAD_VIDEO) {
+                asprintf(
+                        &url,
+                        "yt-dlp --newline "
+                        "-f \"bv[height<=%s]+ba/b[height<=%s]\" "
+                        "--merge-output-format %s "
+                        "-o \"%s/%(title)s.%(ext)s\" "
+                        "%s",
+                        ctx->resolution,
+                        ctx->resolution,
+                        ctx->format,
+                        path,
+                        link
+                );
+        } else {
+                asprintf(
+                        &url,
+                        "yt-dlp --newline "
+                        "-x --audio-format %s "
+                        "--audio-quality %u "
+                        "-o \"%s/%(title)s.%(ext)s\" "
+                        "%s",
+                        ctx->format,
+                        ctx->audio_quality,
+                        path,
+                        link
+                );
+        }
 
         return url;
 }
 
-static gboolean update_output(gpointer data)
+static gboolean update_pbar(gpointer data)
 {
-        char *line = data;
-        g_print("%s", line);
-        g_free(line);
+        ApplicationContext *ctx = data;
+
+        gtk_progress_bar_set_fraction(ctx->pbar, ctx->pbar_fraction / 100.0);
+
+        return FALSE;
+}
+
+static gboolean hide_downloading_box(gpointer data)
+{
+        ApplicationContext *ctx = data;
+        gtk_widget_set_visible(ctx->downloading_box, false);
         return FALSE;
 }
 
 static gpointer run_ytdlp_thread(gpointer data)
 {
-        DownloadConfig *cfg = data;
-        char *url = create_url(cfg);
-        FILE *f = popen(url, "r");
+        ApplicationContext *ctx = data;
+        FILE *f = popen(ctx->url, "r");
         char buf[1024];
 
-        while (fgets(buf, sizeof(buf), f)) {
-                char *line = g_strdup(buf);
-                g_idle_add((GSourceFunc)update_output, line);
+        while (fgets(buf, sizeof(buf), f) && !stop_thread) {
+                if (sscanf(buf, "[download] %lf%", &ctx->pbar_fraction) == 1) {
+                        g_idle_add((GSourceFunc)update_pbar, ctx);
+                }
         }
 
+        if (stop_thread)
+                atomic_store(&stop_thread, false);
+
+        g_idle_add((GSourceFunc)hide_downloading_box, ctx);
         pclose(f);
-        g_free(url);
-        g_free(cfg);
         return NULL;
 }
 
-int exec_ytdlp(DownloadConfig *cfg)
+void on_stop_thread_clicked(GtkButton *self)
 {
-        g_thread_new("yt-dlp", run_ytdlp_thread, cfg);
+        atomic_store(&stop_thread, true);
+}
+
+int exec_ytdlp(ApplicationContext *ctx)
+{
+        ctx->url = create_url(ctx);
+
+        g_thread_new("yt-dlp", run_ytdlp_thread, ctx);
+
         return 0;
 }
