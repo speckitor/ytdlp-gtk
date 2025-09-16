@@ -1,3 +1,4 @@
+#include "gtk/gtk.h"
 #include "types.h"
 #include "options.h"
 #include "ytdlp.h"
@@ -24,6 +25,9 @@ static void download_callback(gpointer data)
         gtk_progress_bar_set_fraction(ctx->pbar, 0.0);
 
         gtk_widget_set_visible(ctx->downloading_box, true);
+
+        gtk_label_set_text(ctx->downloading_label, "Initializing...");
+        gtk_widget_set_visible(GTK_WIDGET(ctx->downloading_label), true);
 
         const char *page_name = gtk_stack_get_visible_child_name(ctx->stack);
 
@@ -80,6 +84,7 @@ static void activate(GApplication *app)
         GtkEntry *path_entry;
         GtkButton *browse;
         GtkWidget *downloading_box;
+        GtkLabel *downloading_label;
         GtkProgressBar *pbar;
         GtkButton *stop;
         GtkButton *download;
@@ -97,6 +102,7 @@ static void activate(GApplication *app)
         path_entry = GTK_ENTRY(gtk_builder_get_object(build, "path_entry"));
         browse = GTK_BUTTON(gtk_builder_get_object(build, "browse"));
         downloading_box = GTK_WIDGET(gtk_builder_get_object(build, "downloading_box"));
+        downloading_label = GTK_LABEL(gtk_builder_get_object(build, "downloading_label"));
         pbar = GTK_PROGRESS_BAR(gtk_builder_get_object(build, "pbar"));
         stop = GTK_BUTTON(gtk_builder_get_object(build, "stop"));
         download = GTK_BUTTON(gtk_builder_get_object(build, "download"));
@@ -112,6 +118,7 @@ static void activate(GApplication *app)
         ctx->audio_format_drop_down = audio_format_drop_down;
         ctx->link_entry = link_entry;
         ctx->downloading_box = downloading_box;
+        ctx->downloading_label = downloading_label;
         ctx->path_entry = path_entry;
         ctx->pbar = pbar;
 

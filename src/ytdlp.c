@@ -1,9 +1,13 @@
 #include <gtk/gtk.h>
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdatomic.h>
+#include <stdlib.h>
 
 #include "ytdlp.h"
+#include "glib.h"
+#include "types.h"
 
 atomic_bool stop_thread = false;
 
@@ -44,19 +48,48 @@ static char *create_url(ApplicationContext *ctx)
         return url;
 }
 
+static gboolean print_ytdlp_logs(gpointer data) {
+        char *line = data;
+        g_print(line);
+        return FALSE;
+}
+
 static gboolean update_pbar(gpointer data)
 {
         ApplicationContext *ctx = data;
+
+        if (gtk_widget_get_visible(GTK_WIDGET(ctx->downloading_label)))
+                gtk_widget_set_visible(GTK_WIDGET(ctx->downloading_label), false);
 
         gtk_progress_bar_set_fraction(ctx->pbar, ctx->pbar_fraction / 100.0);
 
         return FALSE;
 }
 
-static gboolean hide_downloading_box(gpointer data)
+static gboolean on_download_end(gpointer data)
 {
         ApplicationContext *ctx = data;
         gtk_widget_set_visible(ctx->downloading_box, false);
+
+        char *message;
+        switch (ctx->result) {
+                case DOWNLOAD_RESULT_SUCCESS:
+                        message = "File downloaded";
+                        break;
+                case DOWNLOAD_RESULT_DOWNLOAD_CANCELED:
+                        message = "Download canceled";
+                        break;
+                case DOWNLOAD_RESULT_ALREADY_DOWNLOADED:
+                        message = "File already downloaded";
+                        break;
+                case DOWNLOAD_RESULT_UNKNOWN_ERROR:
+                        message = "Unknown error occured";
+                        break;
+        }
+
+
+        AdwToast *toast = adw_toast_new(message);
+        adw_toast_overlay_add_toast(ctx->overlay, toast);
         return FALSE;
 }
 
@@ -67,21 +100,34 @@ static gpointer run_ytdlp_thread(gpointer data)
         char buf[1024];
 
         while (fgets(buf, sizeof(buf), f) && !stop_thread) {
+                g_idle_add((GSourceFunc)print_ytdlp_logs, buf);
                 if (sscanf(buf, "[download] %lf%", &ctx->pbar_fraction) == 1) {
                         g_idle_add((GSourceFunc)update_pbar, ctx);
                 }
         }
 
-        if (stop_thread)
-                atomic_store(&stop_thread, false);
+        int status = pclose(f);
 
-        g_idle_add((GSourceFunc)hide_downloading_box, ctx);
-        pclose(f);
+        char filename[1024];
+        if (stop_thread) {
+                atomic_store(&stop_thread, false);
+                ctx->result = DOWNLOAD_RESULT_DOWNLOAD_CANCELED;
+        } else if (sscanf(buf, "[download] %s has already been downloaded", filename)) {
+                ctx->result = DOWNLOAD_RESULT_ALREADY_DOWNLOADED;
+        } else if (WIFEXITED(status) && WEXITSTATUS(status) == 0){
+                ctx->result = DOWNLOAD_RESULT_SUCCESS;
+        } else {
+                ctx->result = DOWNLOAD_RESULT_UNKNOWN_ERROR;
+        }
+
+        
+        g_idle_add((GSourceFunc)on_download_end, ctx);
         return NULL;
 }
 
 void on_stop_thread_clicked(GtkButton *self)
 {
+        (void)self;
         atomic_store(&stop_thread, true);
 }
 

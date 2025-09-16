@@ -186,6 +186,11 @@
                   <property name="spacing">10</property>
                   <property name="visible">False</property>
                   <child>
+                    <object class="GtkLabel" id="downloading_label">
+                      <property name="visible">False</property>
+                    </object>
+                  </child>
+                  <child>
                     <object class="GtkProgressBar" id="pbar">
                       <property name="hexpand">True</property>
                       <property name="valign">center</property>

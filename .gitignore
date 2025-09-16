@@ -1,4 +1,3 @@
-tags
-mktags.sh
+compile_commands.json
 ytdlp-gtk
 src/ytdlpgtk.c
