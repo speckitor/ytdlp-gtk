@@ -23,12 +23,9 @@ gresources:
 		--generate-source
 
 install: $(BINARY)
-	mkdir -p $(DESKTOP_DIR)/$(BIN_DIR)
-	cp $(BINARY) $(BIN_DIR)
-	mkdir -p $(DESKTOP_DIR)
-	cp data/org.speckitor.NekoDownloader.desktop $(DESKTOP_DIR)
-	mkdir -p $(ICON_DIR)
-	cp data/org.speckitor.NekoDownloader.svg $(ICON_DIR)
+	install -Dm755 $(BINARY) $(BIN_DIR)
+	install -Dm644 data/org.speckitor.NekoDownloader.desktop $(DESKTOP_DIR)
+	install -Dm644 data/org.speckitor.NekoDownloader.svg $(ICON_DIR)
 
 uninstall:
 	rm -f $(BIN_DIR)/$(BINARY)

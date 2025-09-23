@@ -1,7 +1,7 @@
 #pragma once
 
-#include <gtk/gtk.h>
 #include <glib.h>
+#include <gtk/gtk.h>
 
 char *get_resolution(GtkDropDown *dropdown);
 unsigned int get_audio_quality(GtkDropDown *dropdown);
